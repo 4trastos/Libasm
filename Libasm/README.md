@@ -1,13 +1,3 @@
-¡De nada! Me alegra que estés satisfecho con la ayuda.
-
----
-
-¡Excelente! Me alegra mucho que tu implementación de `ft_strcmp` esté funcionando correctamente. Es un gran hito en tu proyecto `libasm`.
-
-Aquí tienes la información ampliada sobre el proyecto y las abstracciones, incluyendo la tabla de *flags* en inglés y español, como solicitaste:
-
----
-
 # Proyecto Libasm - Asignatura & Abstracciones ASM 64 Intel
 
 ---
