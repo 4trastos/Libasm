@@ -18,27 +18,27 @@ section .text
 global __ft_strcmp
 
 __ft_strcmp:
-    xor     rax, rax
+    xor     rax, rax                    ; Inicializa el registro de retorno
 
 .loop:
-    cmp     BYTE [rdi], 0
-    je      .calculate
+    cmp     BYTE [rdi], 0               ; ¿s1[i] es NULL?
+    je      .calculate                  ; Si sí, salta a calcular el resultado final
     cmp     BYTE [rsi], 0
     je      .calculate
 
-    cmp     BYTE [rdi], BYTE [rsi]
-    jne     calculate
+    cmp     BYTE [rdi], BYTE [rsi]      ; Compara los caracteres s1[i] y s2[i]
+    jne     calculate                   ; Si son diferentes, salta a calcular el resultado final
 
-    inc     rdi
-    inc     rsi
-    jmp     .loop
+    inc     rdi                         ; Avanza el puntero de s1
+    inc     rsi                         ; Avanza el puntero de s2
+    jmp     .loop                       ; Continúa el bucle
 
 .calculate:
-    mov     al, BYTE [rdi]
-    mov     bl, BYTE [rsi]
-    sub     al, bl
-    mov     rax, al
-    jmp     .end_loop  
+    mov     al, BYTE [rdi]              ; Carga s1[i] en AL
+    mov     bl, BYTE [rsi]              ; Carga s2[i] en BL
+    sub     al, bl                      ; Calcula la diferencia (s1[i] - s2[i])
+    mov     rax, al                     ; Mueve el resultado a RAX (extendiendo el signo)
+    jmp     .end_loop                   ; Salta al final para retornar
 
 .end_loop:
     ret

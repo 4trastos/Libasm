@@ -24,7 +24,7 @@ TEST_BONUS = test_bonus
 RM = rm -f
 AR = ar rcs
 
-SRC = ft_strlen.s ft_strcpy.s ft_strcmp.s 
+SRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s
 
 OBJS = $(SRC:.s=.o)
 
