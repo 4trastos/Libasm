@@ -20,7 +20,7 @@ global __ft_write
 extern ___error                     ; Función externa que devuelve la dirección de la variable errno
 
 __ft_write:
-    mov     rax, 0x2000004          ; Se carga el número de syscall para 'write' en RAX
+    mov     rax, 0x2000004          ; Se carga el número de syscall para 'write' en RAX (man 2 syscall)
 
     syscall                         ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
 
