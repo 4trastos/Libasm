@@ -29,10 +29,11 @@ _ft_read:
     ret
 
 .handle_error:
-    mov     r10, rax
-    call    ___error
-    mov     dword [rax], r10d
-    mov     rax, -1
+    push    rax                     ; Guarda el código de error positivo (actualmente en RAX) en el Stack (RAM) temporalmente.
+    call    ___error                ; Llama a la función que devuelve la dirección de 'errno'.
+    pop     rdi                     ; Recupera el código de error positivo original de el Stack (RAM).
+    mov     [rax], rdi              ; Mueve el código de error (que está en RDI) a la dirección de 'errno'
+    mov     rax, -1                 ; Establece el valor de retorno final de ft_read a -1,
 
     ret
 
