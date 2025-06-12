@@ -25,8 +25,10 @@ RM = rm -f
 AR = ar rcs
 
 SRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
-
 OBJS = $(SRC:.s=.o)
+
+BONUS = ft_atoi_base_bonus.s
+OBJS_BONUS = $(BONUS:.s=.o)
 
 all: $(NAME)
 
