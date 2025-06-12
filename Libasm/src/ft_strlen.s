@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------
-; __ft_strlen:
+; t_strlen:
 ;   Calcula la longitud de una cadena de caracteres terminada en nulo.
 ;
 ; Argumentos:
@@ -12,9 +12,9 @@
 ; -----------------------------------------------------------------------------
 
 section .text
-global __ft_strlen
+global _ft_strlen
 
-__ft_strlen:            
+_ft_strlen:            
     xor     rax, rax        ; Establece RAX a 0 (nuestro contador de longitud)
 
 .loop:

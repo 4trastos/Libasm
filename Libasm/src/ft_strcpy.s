@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------
-; __ft_strcpy:
+; ft_strcpy:
 ;   Copia una cadena de caracteres terminada en nulo.
 ;
 ; Argumentos:
@@ -13,22 +13,22 @@
 ; -----------------------------------------------------------------------------
 
 section .text
-global __ft_strcpy
+global _ft_strcpy
 
-__ft_strcpy:
-	xor		rax, rax
-	mov		rax, rdi
+_ft_strcpy:
+	xor		rax, rax			; Inicializo el punturo de destino y retorno
+	mov		rax, rdi			; Guardo el puntero de inicio de la copia
 
 .loop:
-	cmp		BYTE [rsi], 0
-	mov		BYTE [rdi], BYTE [rsi]
+	mov		cl, BYTE [rsi]		; Guardo el byte de src[i] en un registro para poder comparar
+	mov		BYTE [rdi], cl		; Comparo los caracteres
+	cmp		cl, 0				; Si son iguales o a terminado sale del bucle
 	je		.end_loop
 
-	inc		rdi
-	inc		rsi
+	inc		rdi					; Aumento una posición
+	inc		rsi					; Auemnto una posición
 
-	jmp		.loop
+	jmp		.loop				; Vuelve a iniciar el loop
 
 .end_loop:
 	ret
-

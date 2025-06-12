@@ -15,13 +15,12 @@
 ; ------------------------------------------------------------------------------------------
 
 section .text
-global  __ft_read
+global  _ft_read
 
 extern ___error                     ; Función externa que devuelve la dirección de la variable errno
 
-__ft_read:
-    mov     rax, 0x20000AC          ; Se carga el número de syscall para 'read' en RAX (man 2 syscall)
-    
+_ft_read:
+    mov     rax, 0x2000003          ; Se carga el número de syscall para 'read' en RAX (man 2 syscall) 
     syscall                         ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
 
     cmp     rax, 0
@@ -30,10 +29,9 @@ __ft_read:
     ret
 
 .handle_error:
-    push    rax
+    mov     r10, rax
     call    ___error
-    pop     rsi
-    mov     [rax], rsi
+    mov     dword [rax], r10d
     mov     rax, -1
 
     ret

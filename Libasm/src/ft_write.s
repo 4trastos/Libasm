@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------------------
-; __ft_write:
+; ft_write:
 ;   write() intenta escribir (nbyte) bytes de datos desde el búfer (buf) hacia el
 ;   objeto referenciado por el descriptor (fildes).
 ;
@@ -15,11 +15,11 @@
 ; ------------------------------------------------------------------------------------------
 
 section .text
-global __ft_write
+global _ft_write
 
 extern ___error                     ; Función externa que devuelve la dirección de la variable errno
 
-__ft_write:
+_ft_write:
     mov     rax, 0x2000004          ; Se carga el número de syscall para 'write' en RAX (man 2 syscall)
 
     syscall                         ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.

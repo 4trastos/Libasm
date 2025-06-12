@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------
-; __ft_strcmp:
+; ft_strcmp:
 ;   Compara las cadenas carácter por carácter (lexicográficamente)
 ;   hasta que encuentra el primer carácter diferente o hasta que llega al
 ;   terminador nulo de cualquiera de las dos cadenas.
@@ -15,9 +15,9 @@
 ; -----------------------------------------------------------------------------
 
 section .text
-global __ft_strcmp
+global _ft_strcmp
 
-__ft_strcmp:
+_ft_strcmp:
     xor     rax, rax                    ; Inicializa el registro de retorno
 
 .loop:
@@ -26,8 +26,9 @@ __ft_strcmp:
     cmp     BYTE [rsi], 0
     je      .calculate
 
-    cmp     BYTE [rdi], BYTE [rsi]      ; Compara los caracteres s1[i] y s2[i]
-    jne     calculate                   ; Si son diferentes, salta a calcular el resultado final
+    mov     cl, BYTE [rdi]              ; Cargo el carácter de s1 (apuntado por RDI) en CL.
+    cmp     cl, BYTE [rsi]              ; Compro CL con el carácter de s2 (apuntado por RSI).
+    jne     .calculate                  ; Si son diferentes, salta a calcular el resultado final
 
     inc     rdi                         ; Avanza el puntero de s1
     inc     rsi                         ; Avanza el puntero de s2
@@ -37,7 +38,7 @@ __ft_strcmp:
     mov     al, BYTE [rdi]              ; Carga s1[i] en AL
     mov     bl, BYTE [rsi]              ; Carga s2[i] en BL
     sub     al, bl                      ; Calcula la diferencia (s1[i] - s2[i])
-    mov     rax, al                     ; Mueve el resultado a RAX (extendiendo el signo)
+    movsx   rax, al                     ; Mueve el resultado a RAX (extendiendo el signo)
     jmp     .end_loop                   ; Salta al final para retornar
 
 .end_loop:

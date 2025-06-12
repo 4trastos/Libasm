@@ -16,59 +16,95 @@
 #include <stdio.h>
 #include <assert.h> 
 
-extern size_t _ft_strlen(const char *s);
-extern char *_ft_strcpy( char *dst, const char *src);
-
-int main() {
-    const char *str1 = "Hola Mundo";
-    const char *str2 = "";
-    const char *str3 = "12345";
-    const char *str4 = "a";
-    size_t original_len;
-    size_t my_len;
-
-    printf("Probando ft_strlen y comparando con strlen original:\n");
-    printf("--------------------------------------------------\n");
-
-    // Prueba 1
-    my_len = _ft_strlen(str1);
-    original_len = strlen(str1);
-    printf("Cadena: '%s'\n", str1);
-    printf("  ft_strlen: %zu\n", my_len);
-    printf("  strlen:    %zu\n", original_len);
-    assert(my_len == original_len); // Mantenemos el assert para la verificación de errores
-    printf("  Resultado: %s\n\n", (my_len == original_len) ? "COINCIDE" : "NO COINCIDE");
+# define STRLEN(a)          printf("'%s' = %zu (%zu)\n", a, ft_strlen(a), strlen(a));
+# define STRCMP(d, e)       printf("`%s`:`%s` = %d (%d)\n", (d ? d : "(null)"), (e ? e : "(null)"), ft_strcmp(d, e), strcmp(d, e));
+# define WRITE(g, h)        printf("^%ld (`%s`:%ld)\n", ft_write(STDOUT_FILENO, g, h), g, h);
+# define READ(j, k)         r = ft_read(STDIN_FILENO, buffer, k); printf("`%s`:%ld\n", buffer, r);
+# define STRDUP(x)          aux = ft_strdup(x); printf("`%s` (`%s`)\n", (aux ? aux : "(null)"), (x ? x : "(null)")); free(aux); aux = NULL;
 
 
-    // Prueba 2
-    my_len = _ft_strlen(str2);
-    original_len = strlen(str2);
-    printf("Cadena: '%s'\n", str2);
-    printf("  ft_strlen: %zu\n", my_len);
-    printf("  strlen:    %zu\n", original_len);
-    assert(my_len == original_len);
-    printf("  Resultado: %s\n\n", (my_len == original_len) ? "COINCIDE" : "NO COINCIDE");
+extern size_t ft_strlen(const char *str);
+extern int ft_strcmp(char const *s1, const char *s2);
+extern char *ft_strcpy(char *dst, char const *src);
+extern ssize_t ft_write(int fd, const void *buf, size_t nbyte);
+extern ssize_t ft_read(int fd, void *buf, size_t nbyte);
+extern char *ft_strdup(char const *s1);
 
 
-    // Prueba 3
-    my_len = _ft_strlen(str3);
-    original_len = strlen(str3);
-    printf("Cadena: '%s'\n", str3);
-    printf("  ft_strlen: %zu\n", my_len);
-    printf("  strlen:    %zu\n", original_len);
-    assert(my_len == original_len);
-    printf("  Resultado: %s\n\n", (my_len == original_len) ? "COINCIDE" : "NO COINCIDE");
+int main()
+{
+    int     i = 0;
+    long    r = 0;
+    char    buffer[100];
+    char    *aux;
+    char    *aux2;
 
+    while (i < 100)
+    {
+        buffer[i] = 0;
+        i++;
+    }
 
-    // Prueba 4
-    my_len = _ft_strlen(str4);
-    original_len = strlen(str4);
-    printf("Cadena: '%s'\n", str4);
-    printf("  ft_strlen: %zu\n", my_len);
-    printf("  strlen:    %zu\n", original_len);
-    assert(my_len == original_len);
-    printf("  Resultado: %s\n\n", (my_len == original_len) ? "COINCIDE" : "NO COINCIDE");
+    printf("Test: ==> ft_strlen\n");
+    STRLEN("");
+    STRLEN("abcd");
+    STRLEN("ABCDEFG");
+    STRLEN("0123456789abcdef");
+    STRLEN("42");
+    STRLEN("1");
+    printf("Test OK\n");
 
+    printf("\nTest: ==> ft_strcmp\n");
+    STRCMP("", "");
+    STRCMP("abcd", "abcd");
+    STRCMP("abcd", "abce");
+    STRCMP("abcd", "abcefgh");
+    STRCMP("", "abcd");
+    STRCMP("abcd", "");
+    // printf("`%s`:`%s` = %d\n", "ABCDEFG", (char *)NULL, ft_strcmp("ABCDEFG", NULL));
+    // printf("`%s`:`%s` = %d\n", (char *)NULL, "ABCDEFG", ft_strcmp(NULL, "ABCDEFG"));
+    // printf("`%s`:`%s` = %d\n", (char *)NULL, (char *)NULL, ft_strcmp(NULL, NULL));
+    printf("Test OK\n");
+
+    printf("\nTest: ==> ft_strcpy\n");
+    printf("`%s` (`abcd`)\n", ft_strcpy(buffer, "abcd"));
+	printf("`%s` (empty)\n", ft_strcpy(buffer, ""));
+	printf("`%s` (`long message`)\n", ft_strcpy(buffer, "long message"));
+	// printf("`%s` (NULL > not modified)\n", ft_strcpy(buffer, NULL));
+    printf("Test OK\n");
+
+    printf("\nTest: ==> ft_write\n");
+	WRITE("abcd", 4L);
+	WRITE("abcdabcd", 4L);
+	WRITE("abcdabcd", 8L);
+	WRITE("abcd", 2L);
+	printf("Test OK\n");
+
+    printf("\nTest: ==> ft_read (Makefile)\n");
+	printf("Por favor, introduce algo para el test de read (máx 50 chars):\n");
+    READ(buffer, 50);
+    printf("Por favor, introduce algo para el test de read (máx 25 chars):\n");
+    READ(buffer, 25);
+    printf("Por favor, introduce algo para el test de read (máx 4 chars):\n");
+    READ(buffer, 4);
+    printf("Por favor, introduce algo para el test de read (máx 26 chars):\n");
+    READ(buffer, 26);
+    printf("Por favor, introduce algo para el test de read (máx 14 chars):\n");
+    READ(buffer, 14);
+    printf("Test de lectura de 0 bytes:\n");
+    READ(buffer, 0);
+    printf("Test OK\n");
+
+    printf("\nTest: ==> ft_strdup\n");
+	aux2 = ft_strdup("abcd");
+	STRDUP(aux2);
+    free(aux2);
+	STRDUP("tester");
+	STRDUP("long message");
+	STRDUP("");
+	// STRDUP(NULL);
+	printf("Test OK\n");
+        
 
     printf("--------------------------------------------------\n");
     printf("Todas las pruebas automáticas comparando el original están OK!\n");
