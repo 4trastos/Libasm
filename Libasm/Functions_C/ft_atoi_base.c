@@ -82,7 +82,6 @@ int ft_atoi_base(char *str, char *base_str)
         i++;
         digit_val = ft_get_digit_value(str[i], base_str, base_val);
     }
-
     return (sign * result);
 }
 
@@ -92,7 +91,7 @@ int main()
     printf("--- BASE 10 ---\n");
     printf("String: \"   -1234124abcd345\", Base: \"0123456789\" -> Result: %d (Expected: -1234124)\n", ft_atoi_base("   -1234124abcd345", "0123456789"));
     printf("String: \"+42\", Base: \"0123456789\" -> Result: %d (Expected: 42)\n", ft_atoi_base("+42", "0123456789"));
-    printf("String: \" --123\", Base: \"0123456789\" -> Result: %d (Expected: 123)\n", ft_atoi_base(" --123", "0123456789")); // --123 -> 123
+    printf("String: \" --123\", Base: \"0123456789\" -> Result: %d (Expected: 123)\n", ft_atoi_base(" --123", "0123456789"));
     printf("String: \"-0\", Base: \"0123456789\" -> Result: %d (Expected: 0)\n", ft_atoi_base("-0", "0123456789"));
     printf("String: \"2147483647\", Base: \"0123456789\" -> Result: %d (Expected: 2147483647)\n", ft_atoi_base("2147483647", "0123456789"));
     printf("String: \"-2147483648\", Base: \"0123456789\" -> Result: %d (Expected: -2147483648)\n", ft_atoi_base("-2147483648", "0123456789"));

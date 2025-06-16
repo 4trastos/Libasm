@@ -1,57 +1,49 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: davgalle <davgalle@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/11/15 14:54:43 by davgalle          #+#    #+#              #
-#    Updated: 2019/11/17 21:22:43 by davgalle         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = libasm.a
 GCC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
-NA	= nasm
+NA  = nasm
 NA_FLAGS = -f macho64
 
-TEST = main.c
-TEST_EXEC = my_test_program
-TEST_BONUS = test_bonus
+SRC_MANDATORY = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
+OBJS_MANDATORY = $(SRC_MANDATORY:.s=.o)
+
+SRC_BONUS = ft_atoi_base_bonus.s
+OBJS_BONUS = $(SRC_BONUS:.s=.o)
+
+TEST_MANDATORY_C = main.c
+TEST_MANDATORY_EXEC = my_test_mandatory
+
+TEST_BONUS_C = main_bonus.c
+TEST_BONUS_EXEC = my_test_bonus
 
 RM = rm -f
 AR = ar rcs
 
-SRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
-OBJS = $(SRC:.s=.o)
-
-BONUS = ft_atoi_base_bonus.s
-OBJS_BONUS = $(BONUS:.s=.o)
-
-all: $(NAME)
-
 %.o: %.s
 	$(NA) $(NA_FLAGS) $< -o $@
 
-$(NAME):	$(OBJS)
-			$(AR) $(NAME) $(OBJS)
+$(NAME): $(OBJS_MANDATORY)
+	$(AR) $(NAME) $(OBJS_MANDATORY)
 
 clean:
-		$(RM) $(OBJS)
+	$(RM) $(OBJS_MANDATORY) $(OBJS_BONUS) 
 
-fclean:	clean
-		$(RM) $(NAME) $(TEST_EXEC)
+fclean: clean
+	$(RM) $(NAME) $(TEST_MANDATORY_EXEC) $(TEST_BONUS_EXEC)
 
 re: fclean all
 
-test:	$(NAME) $(TEST)
-		$(GCC) $(CFLAGS) $(TEST) -L. -lasm -o $(TEST_EXEC)
+test: $(NAME) $(TEST_MANDATORY_C)
+	$(GCC) $(CFLAGS) $(TEST_MANDATORY_C) -L. -lasm -o $(TEST_MANDATORY_EXEC)
+	@echo "\n--- Running Mandatory Tests ($(TEST_MANDATORY_EXEC)) ---\n"
+	./$(TEST_MANDATORY_EXEC)
+	@echo "\n--- Mandatory Tests finished ---\n"
 
-		@echo "\n--- Runnig Test $(TEST_EXEC) ---\n"
-		./$(TEST_EXEC)
-		@echo "\n--- Test run finished ---\n"
+test_bonus: $(NAME) $(OBJS_BONUS) $(TEST_BONUS_C)
+	$(GCC) $(CFLAGS) $(TEST_BONUS_C) -L. -lasm $(OBJS_BONUS) -o $(TEST_BONUS_EXEC)
+	@echo "\n--- Running Bonus Tests ($(TEST_BONUS_EXEC) - ft_atoi_base) ---\n"
+	./$(TEST_BONUS_EXEC)
+	@echo "\n--- Bonus Tests finished ---\n"
 
-.PHONY: all clean fclean re test
-
+.PHONY: all clean fclean re test test_bonus
