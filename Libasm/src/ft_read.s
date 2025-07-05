@@ -15,13 +15,13 @@
 ; ------------------------------------------------------------------------------------------
 
 section .text
-global  _ft_read
+global  ft_read
 
-extern ___error                     ; Función externa que devuelve la dirección de la variable errno
+extern __errno_location                     ; Función externa que devuelve la dirección de la variable errno
 
 _ft_read:
-    mov     rax, 0x2000003          ; Se carga el número de syscall para 'read' en RAX (man 2 syscall) 
-    syscall                         ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
+    mov     rax, 0                          ; Se carga el número de syscall para 'read' en RAX (man 2 syscall) 
+    syscall                                 ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
 
     cmp     rax, 0
     jc      .handle_error
@@ -29,11 +29,11 @@ _ft_read:
     ret
 
 .handle_error:
-    push    rax                     ; Guarda el código de error positivo (actualmente en RAX) en el Stack (RAM) temporalmente.
-    call    ___error                ; Llama a la función que devuelve la dirección de 'errno'.
-    pop     rdi                     ; Recupera el código de error positivo original de el Stack (RAM).
-    mov     [rax], rdi              ; Mueve el código de error (que está en RDI) a la dirección de 'errno'
-    mov     rax, -1                 ; Establece el valor de retorno final de ft_read a -1,
+    push    rax                             ; Guarda el código de error positivo (actualmente en RAX) en el Stack (RAM) temporalmente.
+    call     __errno_location wrt ..plt     ; Llama a la función que devuelve la dirección de 'errno'.
+    pop     rdi                             ; Recupera el código de error positivo original de el Stack (RAM).
+    mov     [rax], rdi                      ; Mueve el código de error (que está en RDI) a la dirección de 'errno'
+    mov     rax, -1                         ; Establece el valor de retorno final de ft_read a -1,
 
     ret
 

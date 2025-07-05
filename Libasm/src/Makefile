@@ -3,19 +3,14 @@ GCC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 
 NA  = nasm
-NA_FLAGS = -f macho64
+#NA_FLAGS = -f macho64 (MacOS)
+NA_FLAGS = -f elf64
 
 SRC_MANDATORY = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 OBJS_MANDATORY = $(SRC_MANDATORY:.s=.o)
 
-SRC_BONUS = ft_atoi_base_bonus.s
-OBJS_BONUS = $(SRC_BONUS:.s=.o)
-
 TEST_MANDATORY_C = main.c
 TEST_MANDATORY_EXEC = my_test_mandatory
-
-TEST_BONUS_C = main_bonus.c
-TEST_BONUS_EXEC = my_test_bonus
 
 RM = rm -f
 AR = ar rcs
@@ -40,10 +35,4 @@ test: $(NAME) $(TEST_MANDATORY_C)
 	./$(TEST_MANDATORY_EXEC)
 	@echo "\n--- Mandatory Tests finished ---\n"
 
-test_bonus: $(NAME) $(OBJS_BONUS) $(TEST_BONUS_C)
-	$(GCC) $(CFLAGS) $(TEST_BONUS_C) -L. -lasm $(OBJS_BONUS) -o $(TEST_BONUS_EXEC)
-	@echo "\n--- Running Bonus Tests ($(TEST_BONUS_EXEC) - ft_atoi_base) ---\n"
-	./$(TEST_BONUS_EXEC)
-	@echo "\n--- Bonus Tests finished ---\n"
-
-.PHONY: all clean fclean re test test_bonus
+.PHONY: all clean fclean re test
