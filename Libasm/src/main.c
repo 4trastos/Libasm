@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: davgalle <davgalle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/16 15:19:07 by davgalle          #+#    #+#             */
-/*   Updated: 2019/11/18 12:16:14 by davgalle         ###   ########.fr       */
+/*   Created: 2025/07/09 13:34:59 by davgalle          #+#    #+#             */
+/*   Updated: 2025/07/09 16:51:23 by davgalle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,156 +19,110 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-# define STRLEN(a)          printf("'%s' = %zu (%zu)\n", a, _ft_strlen(a), strlen(a))
-# define STRCMP(d, e)       printf("`%s`:`%s` = %d (%d)\n", (d ? d : "(null)"), (e ? e : "(null)"), _ft_strcmp(d, e), strcmp(d, e))
-# define WRITE(g, h)        printf("^%ld (`%s`:%ld)\n", _ft_write(STDOUT_FILENO, g, h), g, h)
-# define READ(j, k)         r = _ft_read(STDIN_FILENO, buffer, k); printf("`%s`:%ld\n", buffer, r);
-# define ERROR_READ_FD(j, k) do { r = _ft_read(j, buffer, k); printf("FD=%d: %ld (errno=%d)\n", j, r, errno); } while (0)
-# define ERROR_READ_FILE(filename, k) do { \
-    int fd = open(filename, O_RDONLY); \
-    r = _ft_read(fd, buffer, k); \
-    printf("File '%s': %ld (errno=%d)\n", filename, r, errno); \
-    if (fd != -1) close(fd); \
-} while (0)
-# define STRDUP(x)          aux = _ft_strdup(x); printf("`%s` (`%s`)\n", (aux ? aux : "(null)"), (x ? x : "(null)")); free(aux); aux = NULL;
-# define TEST_READ_FILE(filename, k) do { \
-    printf("\nTesting file: '%s'\n", filename); \
-    int fd = open(filename, O_RDONLY); \
-    if (fd == -1) { \
-        printf("Error opening file (errno=%d)\n", errno); \
-    } else { \
-        r = _ft_read(fd, buffer, k); \
-        printf("Read %ld bytes:\n`%.*s`\n", r, (int)r, buffer); \
-        close(fd); \
-    } \
-} while (0)
-
 extern size_t _ft_strlen(const char *str);
-extern int _ft_strcmp(char const *s1, const char *s2);
-extern char *_ft_strcpy(char *dst, char const *src);
-extern ssize_t _ft_write(int fd, const void *buf, size_t nbyte);
-extern ssize_t _ft_read(int fd, void *buf, size_t nbyte);
+extern  char * _ft_strcpy(char *dst, const char *src);
+extern  int _ft_strcmp(const char *s1, const char *s2 );
+extern  ssize_t _ft_write(int fd, const void *buf, size_t nbyte);
+extern  ssize_t _ft_read(int fd, void *buf, size_t nbyte);
 extern char *_ft_strdup(char const *s1);
 
-
-int main()
+int main(int argc, char **argv)
 {
-    int     i = 0;
-    long    r = 0;
-    char    buffer[100];
-    char    *aux;
-    char    *aux2;
 
-    while (i < 100)
+    if (argc == 1)
     {
-        buffer[i] = 0;
-        i++;
+        printf("Introduce una cadena de caracteres: \n");
+        return (1);
+    }
+    else
+    {
+        char *str  = argv[1];
+        char *copy; 
+        copy = malloc(strlen(argv[1]) + 1);
+        if (!copy)
+            return (1);
+        
+        printf("######## TEST DE LONGITUD ################## \n");
+        printf("El string:  '%s'  ===> Mide:  '%ld'  Bytes en replica Ensamblador\n", str, _ft_strlen(str));
+        printf("El string:  '%s'  ===> Mide:  '%ld'  Bytes en STRLEN Original\n", str, strlen(str));
+        
+        printf("\n######## TEST DE COPIA ################## \n");
+        printf("El string Orinal: '%s' =======> La copia con replica Ensamblador: '%s'\n", str, _ft_strcpy(copy, str));
+        printf("El string Orinal: '%s' =======> La copia con STRCPY Original: '%s'\n", str, strcpy(copy, str));
+
+        printf("\n######## TEST DE COMPARE IGUALES ################## \n");
+        printf("El string Orinal: '%s' =======> Compara copia con replica Ensamblador: '%s' ====> Salida %d\n", str, copy, _ft_strcmp(str, copy));
+        printf("El string Orinal: '%s' =======> Compara la copia con STRCMP Original: '%s'  ====> Salida %d\n", str, copy, strcmp(str, copy));
+
+        printf("\n######## TEST DE COMPARE DIFERENTES NEGATIVOS ################## \n");
+        printf("El string 'ABCDEF' =======> Compara con replica Ensamblador: 'ABCDFG' ====> Salida %d\n", _ft_strcmp("ABCDEF", "ABCDFG"));
+        printf("El string 'ABCDEF' =======> Compara con STRCMP original: 'ABCDFG' ====> Salida %d\n", strcmp("ABCDEF", "ABCDFG"));
+
+        printf("\n######## TEST DE COMPARE DIFERENTES POSITIVOS ################## \n");
+        printf("El string 'ABCDEF' =======> Compara con replica Ensamblador: 'ABCDBG' ====> Salida %d\n", _ft_strcmp("ABCDEF", "ABCDBG"));
+        printf("El string 'ABCDEF' =======> Compara con STRCMP original: 'ABCDBG' ====> Salida %d\n", strcmp("ABCDEF", "ABCDBG"));
+
+        printf("\n######## TEST DE WRITE ################## \n");
+
+        ssize_t ret;
+
+        // Caso correcto (fd = 1, stdout)
+        printf("   Escribiendo por stdout usando _ft_write (fd=1): ");
+        ret = _ft_write(1, str, _ft_strlen(str));
+        printf("\n_bytes escritos: %zd | errno: %d\n", ret, errno);
+
+        errno = 0;
+        printf("   Escribiendo por stdout usando write original (fd=1): ");
+        ret = write(1, str, strlen(str));
+        printf("\n_bytes escritos: %zd | errno: %d\n", ret, errno);
+
+        // Caso con error (fd = -1)
+        errno = 0;
+        printf("\nIntentando escribir por fd=-1 usando _ft_write: ");
+        ret = _ft_write(-1, str, _ft_strlen(str));
+        printf("\n_bytes escritos: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
+
+        errno = 0;
+        printf("Intentando escribir por fd=-1 usando write original: ");
+        ret = write(-1, str, strlen(str));
+        printf("\n_bytes escritos: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
+
+        printf("\n######## TEST DE READ ################## \n");
+
+        ssize_t ret;
+        char buffer[100];
+
+        // Caso correcto: leer desde STDIN (fd = 0)
+        printf("Introduce algo por teclado (prueba _ft_read): ");
+        fflush(stdout); // Forzamos salida antes de leer
+        errno = 0;
+        ret = _ft_read(0, buffer, sizeof(buffer) - 1);
+        if (ret >= 0)
+            buffer[ret] = '\0';
+        printf("Bytes leídos: %zd | Contenido: \"%s\" | errno: %d\n", ret, buffer, errno);
+
+        printf("Introduce algo por teclado (prueba read original): ");
+        fflush(stdout);
+        errno = 0;
+        ret = read(0, buffer, sizeof(buffer) - 1);
+        if (ret >= 0)
+            buffer[ret] = '\0';
+        printf("Bytes leídos: %zd | Contenido: \"%s\" | errno: %d\n", ret, buffer, errno);
+
+        // Caso con error: fd inválido
+        errno = 0;
+        ret = _ft_read(-1, buffer, sizeof(buffer) - 1);
+        printf("\nProbando _ft_read con fd = -1 ==> Bytes: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
+
+        errno = 0;
+        ret = read(-1, buffer, sizeof(buffer) - 1);
+        printf("Probando read original con fd = -1 ==> Bytes: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
+
+        printf("\n######## TEST DE DUPLICATE  ################## \n");
+        printf("El string Orinal: '%s' =======> El  duplicado con replica Ensamblador: '%s'\n", str, _ft_strdup(str));
+        printf("El string Orinal: '%s' =======> El duplicado con STRDUP Original: '%s'\n", str, strdup(str));
     }
 
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST STRLEN ***: ==> ft_strlen\n");
-    STRLEN("");
-    STRLEN("abcd");
-    STRLEN("ABCDEFG");
-    STRLEN("0123456789abcdef");
-    STRLEN("42");
-    STRLEN("1");
-    printf("Test OK\n");
-
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST COMPARE ***: ==> ft_strcmp\n");
-    STRCMP("", "");
-    STRCMP("abcd", "abcd");
-    STRCMP("abcd", "abce");
-    STRCMP("abcd", "abcefgh");
-    STRCMP("", "abcd");
-    STRCMP("abcd", "");
-    // printf("`%s`:`%s` = %d\n", "ABCDEFG", (char *)NULL, ft_strcmp("ABCDEFG", NULL));
-    // printf("`%s`:`%s` = %d\n", (char *)NULL, "ABCDEFG", ft_strcmp(NULL, "ABCDEFG"));
-    // printf("`%s`:`%s` = %d\n", (char *)NULL, (char *)NULL, ft_strcmp(NULL, NULL));
-    printf("Test OK\n");
-
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST COPY ***: ==> ft_strcpy\n");
-    printf("`%s` (`abcd`)\n", _ft_strcpy(buffer, "abcd"));
-	printf("`%s` (empty)\n", _ft_strcpy(buffer, ""));
-	printf("`%s` (`long message`)\n", _ft_strcpy(buffer, "long message"));
-	// printf("`%s` (NULL > not modified)\n", ft_strcpy(buffer, NULL));
-    printf("Test OK\n");
-
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST WRITE ***: ==> ft_write\n");
-	WRITE("abcd", 4L);
-	WRITE("abcdabcd", 4L);
-	WRITE("abcdabcd", 8L);
-	WRITE("abcd", 2L);
-	printf("Test OK\n");
-
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST READ ***: ==> ft_read (Casos de error)\n");
-
-    // 1. Test con file descriptor inválido
-    printf("1. FD inválido (-1):\n");
-    ERROR_READ_FD(-1, 1000);
-
-    // 2. Test con archivo que no existe
-    printf("\n2. Archivo inexistente:\n");
-    ERROR_READ_FILE("/este/archivo/no/existe.txt", 100);
-
-    // 3. Test con archivo sin permisos de lectura
-    printf("\n3. Archivo sin permisos:\n");
-    system("touch /tmp/protegido && chmod 000 /tmp/protegido");
-    ERROR_READ_FILE("/tmp/protegido", 100);
-    system("rm -f /tmp/protegido");
-
-    // 4. Tests normales de lectura
-    printf("\n4. Lectura estándar:\n");
-    printf("Introduce texto para probar lectura (max 50 chars):\n");
-    READ(STDIN_FILENO, 50);
-
-    // 5. Test de lectura de 0 bytes
-    printf("\n5. Lectura de 0 bytes:\n");
-    READ(STDIN_FILENO, 0);
-
-    printf("\n**********************************************************");
-    printf("\n*** TEST READ FILE ***: Prueba con archivo personalizado\n");
-    
-    char filepath[256];
-    printf("\nIntroduce la ruta completa del archivo que quieres probar (o Enter para saltar): ");
-    if (fgets(filepath, sizeof(filepath), stdin) != NULL) {
-        // Eliminar el salto de línea final
-        filepath[strcspn(filepath, "\n")] = 0;
-        
-        if (filepath[0] != '\0') {
-            TEST_READ_FILE(filepath, sizeof(buffer) - 1);
-        } else {
-            printf("-- Prueba de archivo omitida --\n");
-        }
-    }
-    
-    // Limpiar el buffer para las pruebas siguientes
-    memset(buffer, 0, sizeof(buffer));
-
-    printf("\n************************************");
-    printf("\n************************************\n");
-    printf("\n*** TEST STRDUP **** : ==> ft_strdup\n");
-	aux2 = _ft_strdup("abcd");
-	STRDUP(aux2);
-    free(aux2);
-	STRDUP("tester");
-	STRDUP("long message");
-	STRDUP("");
-	// STRDUP(NULL);
-	printf("Test OK\n");
-        
-    printf("\n************************************");
-    printf("--------------------------------------------------\n");
-    printf("Todas las pruebas automáticas comparando el original están OK!\n");
-
-    return 0;
+    return (0);
 }
+

@@ -14,17 +14,17 @@
 section .text
 global _ft_strlen
 
-_ft_strlen:            
-    xor     rax, rax        ; Establece RAX a 0 (nuestro contador de longitud)
+_ft_strlen:
+    xor     rax, rax
 
 .loop:
-    cmp     BYTE [rdi], 0   ; Compara el byte actual apuntado por RDI con 0
-    je      .end_loop       ; Si es 0, hemos encontrado el final de la cadena
+    cmp     BYTE[rdi], 0
+    je      .end_loop
 
-    inc     rax             ; Incrementar el contador de longitud
-    inc     rdi             ; Mover el puntero a la siguiente posición
+    inc     rax
+    inc     rdi
 
-    jmp     .loop           ; Volver a la etiqueta .loop
+    jmp     .loop
 
 .end_loop:
-    ret                     ; Retornar de la función (RAX ya tiene la longitud)
+    ret

@@ -18,28 +18,30 @@ section .text
 global _ft_strcmp
 
 _ft_strcmp:
-    xor     rax, rax                    ; Inicializa el registro de retorno
+	xor		rax, rax	
 
 .loop:
-    cmp     BYTE [rdi], 0               ; ¿s1[i] es NULL?
-    je      .calculate                  ; Si sí, salta a calcular el resultado final
-    cmp     BYTE [rsi], 0
-    je      .calculate
+	cmp		BYTE[rdi], 0
+	je		.calculate
+	cmp		BYTE[rsi], 0
+	je		.calculate
+	
+	mov		r8b, BYTE[rdi]      ; Uso el registro de Propósito genral de 8bits
+	mov		r9b, BYTE[rsi]      ; Uso el registro de Propósito genral de 8bits
+	
+	cmp		r9b, r8b
+	jne		.calculate
 
-    mov     cl, BYTE [rdi]              ; Cargo el carácter de s1 (apuntado por RDI) en CL.
-    cmp     cl, BYTE [rsi]              ; Compro CL con el carácter de s2 (apuntado por RSI).
-    jne     .calculate                  ; Si son diferentes, salta a calcular el resultado final
-
-    inc     rdi                         ; Avanza el puntero de s1
-    inc     rsi                         ; Avanza el puntero de s2
-    jmp     .loop                       ; Continúa el bucle
+	inc		rdi
+	inc		rsi
+	
+	jmp		.loop
 
 .calculate:
-    mov     al, BYTE [rdi]              ; Carga s1[i] en AL
-    mov     bl, BYTE [rsi]              ; Carga s2[i] en BL
-    sub     al, bl                      ; Calcula la diferencia (s1[i] - s2[i])
-    movsx   rax, al                     ; Mueve el resultado a RAX (extendiendo el signo)
-    jmp     .end_loop                   ; Salta al final para retornar
+	mov		al, r8b;
+	sub		al, r9b
+	movsx	rax, al             ; Para extender correctamente el resultado de la resta con signo a 64 bits, ya que strcmp puede devolver valores negativos.
+	jmp		.end_loop
 
 .end_loop:
-    ret
+	ret

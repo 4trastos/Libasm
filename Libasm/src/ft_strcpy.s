@@ -16,19 +16,21 @@ section .text
 global _ft_strcpy
 
 _ft_strcpy:
-	xor		rax, rax			; Inicializo el punturo de destino y retorno
-	mov		rax, rdi			; Guardo el puntero de inicio de la copia
+	xor		rax, rax			
+	mov		rbx, rdi			; Guardo el puntero original de destino
 
 .loop:
-	mov		cl, BYTE [rsi]		; Guardo el byte de src[i] en un registro para poder comparar
-	mov		BYTE [rdi], cl		; Comparo los caracteres
-	cmp		cl, 0				; Si son iguales o a terminado sale del bucle
+	mov		r8b, BYTE [rsi]		
+	mov		BYTE [rdi], r8b
+
+	cmp		r8b, 0				
 	je		.end_loop
 
-	inc		rdi					; Aumento una posición
-	inc		rsi					; Auemnto una posición
+	inc		rsi					
+	inc		rdi					
 
-	jmp		.loop				; Vuelve a iniciar el loop
+	jmp		.loop				
 
 .end_loop:
+	mov		rax, rbx			; Devuelvo el puntero original
 	ret

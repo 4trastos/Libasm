@@ -1,11 +1,12 @@
 ; -----------------------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------------------
+;  ssize_t ft_write(int fd, const void *buf, size_t nbyte);
 ; ft_write:
 ;   write() intenta escribir (nbyte) bytes de datos desde el búfer (buf) hacia el
-;   objeto referenciado por el descriptor (fildes).
+;   objeto referenciado por el descriptor (fd).
 ;
 ; Argumentos:
-;   RDI - Regitro del periférico / objeto referenciado (int fildes)
+;   RDI - Regitro del periférico / objeto referenciado (int fd)
 ;   RSI - Puntero a la cadena de caracteres (const void *buf)
 ;   RDX - Registro del número de bytes a enviar (size_t nbyte)
 ;
@@ -22,18 +23,19 @@ extern __errno_location                     ; Función externa que devuelve la d
 _ft_write:
     mov     rax, 1                          ; Se carga el número de syscall para 'write' en RAX (man 2 syscall)
 
-    syscall                                 ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
+    syscall        
 
-    cmp     rax, 0                          ; Compara el valor de retorno con 0
-    jl      .handle_error                   ; Salta si es negativo (error)
+    cmp     rax, 0                          
+    jl      .handle_error                   ; if rax < 0, jump to error
 
     ret                                     ; Retorna el valor en RAX
 
 .handle_error:
-    push    rax                             ; Guarda el código de error positivo (actualmente en RAX) en el Stack (RAM) temporalmente.
-    call    __errno_location wrt ..plt      ; Llama a la función que devuelve la dirección de 'errno'.
-    pop     rdi                             ; Recupera el código de error positivo original de el Stack (RAM).
-    mov     [rax], rdi                      ; Mueve el código de error (que está en RDI) a la dirección de 'errno'
-    mov     rax, -1                         ; Establece el valor de retorno final de ft_write a -1,
+    neg     rax
+    push    rax                             ; Guardo el código de error
+    call    __errno_location wrt ..plt      ; llamo a función externa a traves de PLT.
+    pop     rdi                             ; Recupera el código de error negativo.
+    mov     [rax], rdi                      ; Escribo el valor de errno en la dirección devuelta por __errno_location()
+    mov     rax, -1                       
 
     ret

@@ -1,5 +1,7 @@
 ; -----------------------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------------------
+; char *strdup(const char *s);
+;
 ; ft_strdup:
 ;   strdup() asigna memoria suficiente para una copia de la cadena s1 (const char *s1),
 ;   realiza la copia y devuelve un puntero a esta.
@@ -23,19 +25,20 @@ extern  malloc
 _ft_strdup:
     push    rbp                             ; Guarda el base pointer actual
     mov     rbp, rsp                        ; Establece el nuevo base pointer al stack pointer actual
-    push    r12                             ; Guarda R12 (callee-saved, para s1 original)
-    push    r13                             ; Guarda R13 (callee-saved, para puntero dst para iterar)
-    push    rsi                             ; Guarda RSI (callee-saved, para el resultado final)
-    push    rbx                             ; Guarda RBX (callee-saved, para la longitud)
 
-    mov     r12, rdi                        ; R12 ahora guarda el puntero original s1 (inmodificable por llamadas)
+    push    r12                             ; s1 original (src)
+    push    r13                             ; callee-saved, puntero para escritura (dst)
+    push    rsi                             ; callee-saved, puntero base de malloc
+    push    rbx                             ; callee-saved, longitud de s1
 
-    xor     rax, rax                        ; (1) Inicializo RAX a 0. Esto no es estrictamente necesario, pero a mi me gusta.
-    call    _ft_strlen                      ; (2) Llamo a __ft_strlen. El argumento (s1) ya está en RDI. Retorna la longitud en RAX.
-    mov     rbx, rax                        ; (3) Guardo la longitud (de RAX) en RBX puesto que en RAX se almacenará el puntero base.
+    mov     r12, rdi                        ; R12 = s1
+
+    xor     rax, rax                        
+    call    _ft_strlen                      ; rax = strlen(s1)
+    mov     rbx, rax                        
     
-    inc     rbx                             ; (4) Incremento RBX la longitud de la reserva en un bit para almacenar el '\0'
-    mov     rdi, rbx                        ; (6) Guardo en RDI la longitud de la reserva. malloc recibe como argumento a RDI
+    inc     rbx                             ; incluir '\0'
+    mov     rdi, rbx                        ; Guardo en RDI la longitud de la reserva. malloc recibe como argumento a RDI
 
     call    malloc wrt ..plt                ; (7) Llamo a Malloc. Retorna el nuevo puntero (o NULL) en RAX. 
     cmp     rax, 0                          ; (8) Comparo el retorno de malloc (en RAX) con 0 (NULL)
