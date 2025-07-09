@@ -4,13 +4,14 @@ CFLAGS = -Wall -Wextra -Werror -g
 
 NA  = nasm
 #NA_FLAGS = -f macho64 (MacOS)
-NA_FLAGS = -f elf64
+NA_FLAGS = -f elf64 -DPIC
 
 SRC_MANDATORY = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 OBJS_MANDATORY = $(SRC_MANDATORY:.s=.o)
 
 TEST_MANDATORY_C = main.c
 TEST_MANDATORY_EXEC = my_test_mandatory
+TEST_EXEC = a.out
 
 RM = rm -f
 AR = ar rcs
@@ -25,7 +26,7 @@ clean:
 	$(RM) $(OBJS_MANDATORY) $(OBJS_BONUS) 
 
 fclean: clean
-	$(RM) $(NAME) $(TEST_MANDATORY_EXEC) $(TEST_BONUS_EXEC)
+	$(RM) $(NAME) $(TEST_MANDATORY_EXEC) $(TEST_BONUS_EXEC) $(TEST_EXEC)
 
 re: fclean all
 

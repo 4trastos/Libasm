@@ -15,7 +15,7 @@
 ; ------------------------------------------------------------------------------------------
 
 section .text
-global  ft_write
+global  _ft_write
 
 extern __errno_location                     ; Función externa que devuelve la dirección de la variable errno
 
@@ -25,13 +25,13 @@ _ft_write:
     syscall                                 ; Ejecuta la llamada al sistema. Esta instrucción transfiere el control al kernel.
 
     cmp     rax, 0                          ; Compara el valor de retorno con 0
-    jc      .handle_error                   ; Si el Carry Flag (CF) está establecido (indicando un error),
+    jl      .handle_error                   ; Salta si es negativo (error)
 
     ret                                     ; Retorna el valor en RAX
 
 .handle_error:
     push    rax                             ; Guarda el código de error positivo (actualmente en RAX) en el Stack (RAM) temporalmente.
-    call    __errno_location wrt ..plt      ;wrt ..plt Para llamar a cosas desde librerias dinamicas                ; Llama a la función que devuelve la dirección de 'errno'.
+    call    __errno_location wrt ..plt      ; Llama a la función que devuelve la dirección de 'errno'.
     pop     rdi                             ; Recupera el código de error positivo original de el Stack (RAM).
     mov     [rax], rdi                      ; Mueve el código de error (que está en RDI) a la dirección de 'errno'
     mov     rax, -1                         ; Establece el valor de retorno final de ft_write a -1,
