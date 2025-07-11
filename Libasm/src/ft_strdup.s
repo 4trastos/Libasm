@@ -40,46 +40,44 @@ _ft_strdup:
     inc     rbx                             ; incluir '\0'
     mov     rdi, rbx                        ; Guardo en RDI la longitud de la reserva. malloc recibe como argumento a RDI
 
-    call    malloc wrt ..plt                ; (7) Llamo a Malloc. Retorna el nuevo puntero (o NULL) en RAX. 
-    cmp     rax, 0                          ; (8) Comparo el retorno de malloc (en RAX) con 0 (NULL)
-    je      .handle_error                   ; (9) Si se activa la Flag ZF (RAX es NULL) malloc falló, salta a .handle_error.
+    call    malloc wrt ..plt                ; Llamo a Malloc. Retorna el nuevo puntero (o NULL) en RAX. 
+    cmp     rax, 0
+    je      .handle_error                   ; Si se activa la Flag ZF (RAX es NULL) malloc falló, salta a .handle_error.
 
-    mov     rsi, rax                        ; (10) Guardo el puntero base de la memoria asignada (de RAX) en RSI para el final
-    mov     r13, rax                        ; (11) Guardo el puntero base de la memoria asignada (de RAX) en RDX para copiar.
+    mov     rsi, rax                        ; puntero base de la memoria asignada (de RAX) en RSI para el return
+    mov     r13, rax                        ; puntero base de la memoria asignada (de RAX) en RDX para copiar.
     jmp     .loop
 
 .handle_error:
-    call    __errno_location wrt ..plt      ; (1) Obtengo la dirección de la variable 'errno' en RAX. (RAX = &errno)
-    mov     edi, 12                         ; (2) Mueve el valor 12 (ENOMEM) a ECX (parte baja de RCX).
-    mov     dword [rax], edi                ; (3) Muevo el contenido de ECX (12) a la dirección de memoria apuntada por RAX. Escribe valor variable 'errno'.
-    mov     rax, 0                          ; (4) Pongo 0 en RAX para el retorno (NULL).
+    call    __errno_location wrt ..plt      ; Obtengo la dirección de la variable 'errno' en RAX. (RAX = &errno)
+    mov     edi, 12                         ; 12 = ENOMEM
+    mov     dword [rax], edi                ; dword = double word = 4 bytes = 32 bits. Escribe valor variable 'errno'.
+    mov     rax, 0                          ; Pongo 0 en RAX para el retorno (NULL).
 
-    pop     rbx                             ; Restaurar RBX
-    pop     rsi                             ; Restaurar RSI
-    pop     r13                             ; Restaurar R13
-    pop     r12                             ; Restaurar R12
-    pop     rbp                             ; Restaurar RBP
+    jmp     .restore
     
     ret
 
 .loop:
-    mov     al, BYTE[r12]                   ; (1) Cargo el byte actual de s1 (RCX) en AL (parte baja de RAX).
-    mov     BYTE[r13], al                   ; (2) Copio el byte de AL a la nueva cadena (RDX).
-    cmp     al, 0                           ; (3) Comparo el byte que acabamos de copiar (en AL) con '\0'.
-    je      .end_loop                       ; (4) Si la Flag ZF se activa el byte es '\0', termina el bucle. Ya estará copiado el '\0'.
+    mov     al, BYTE[r12]                   ; (parte baja de RAX).
+    mov     BYTE[r13], al 
+    cmp     al, 0  
+    je      .end_loop
 
-    inc     r12                             ; (5) Incremento 1 byte en s1
-    inc     r13                             ; (6) Incremento 1 byte en la cadena nueva
+    inc     r12 
+    inc     r13 
 
-    jmp     .loop                           ; (7) Salta al inicio del bucle.
+    jmp     .loop      
 
-.end_loop:
-    mov     rax, rsi                        ; (1)  Muevo el puntero base original (guardado en RSI) a RAX para el retorno
-
+.restore:
     pop     rbx                             ; Restaurar RBX
     pop     rsi                             ; Restaurar RSI
     pop     r13                             ; Restaurar R13
     pop     r12                             ; Restaurar R12
     pop     rbp                             ; Restaurar RBP
+
+.end_loop:
+    mov     rax, rsi                        ; Mover el puntero base original (guardado en RSI) a RAX para el retorno
+    jmp     .restore
 
     ret
