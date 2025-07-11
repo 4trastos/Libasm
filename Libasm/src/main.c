@@ -42,7 +42,7 @@ int main(int argc, char **argv)
         if (!copy)
             return (1);
         
-        printf("######## TEST DE LONGITUD ################## \n");
+        printf("\n######## TEST DE LONGITUD ################## \n");
         printf("El string:  '%s'  ===> Mide:  '%ld'  Bytes en replica Ensamblador\n", str, _ft_strlen(str));
         printf("El string:  '%s'  ===> Mide:  '%ld'  Bytes en STRLEN Original\n", str, strlen(str));
         
@@ -61,11 +61,15 @@ int main(int argc, char **argv)
         printf("\n######## TEST DE COMPARE DIFERENTES POSITIVOS ################## \n");
         printf("El string 'ABCDEF' =======> Compara con replica Ensamblador: 'ABCDBG' ====> Salida %d\n", _ft_strcmp("ABCDEF", "ABCDBG"));
         printf("El string 'ABCDEF' =======> Compara con STRCMP original: 'ABCDBG' ====> Salida %d\n", strcmp("ABCDEF", "ABCDBG"));
-
+        
+        printf("\n######## TEST DE DUPLICATE  ################## \n");
+        printf("El string Orinal: '%s' =======> El  duplicado con replica Ensamblador: '%s'\n", str, _ft_strdup(str));
+        printf("El string Orinal: '%s' =======> El duplicado con STRDUP Original: '%s'\n", str, strdup(str));
+        
         printf("\n######## TEST DE WRITE ################## \n");
-
+        
         ssize_t ret;
-
+        
         // Caso correcto (fd = 1, stdout)
         printf("   Escribiendo por stdout usando _ft_write (fd=1): ");
         ret = _ft_write(1, str, _ft_strlen(str));
@@ -88,8 +92,7 @@ int main(int argc, char **argv)
         printf("\n_bytes escritos: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
 
         printf("\n######## TEST DE READ ################## \n");
-
-        ssize_t ret;
+        
         char buffer[100];
 
         // Caso correcto: leer desde STDIN (fd = 0)
@@ -118,9 +121,6 @@ int main(int argc, char **argv)
         ret = read(-1, buffer, sizeof(buffer) - 1);
         printf("Probando read original con fd = -1 ==> Bytes: %zd | errno: %d (%s)\n", ret, errno, strerror(errno));
 
-        printf("\n######## TEST DE DUPLICATE  ################## \n");
-        printf("El string Orinal: '%s' =======> El  duplicado con replica Ensamblador: '%s'\n", str, _ft_strdup(str));
-        printf("El string Orinal: '%s' =======> El duplicado con STRDUP Original: '%s'\n", str, strdup(str));
     }
 
     return (0);
