@@ -48,16 +48,6 @@ _ft_strdup:
     mov     r13, rax                        ; puntero base de la memoria asignada (de RAX) en RDX para copiar.
     jmp     .loop
 
-.handle_error:
-    call    __errno_location wrt ..plt      ; Obtengo la dirección de la variable 'errno' en RAX. (RAX = &errno)
-    mov     edi, 12                         ; 12 = ENOMEM
-    mov     dword [rax], edi                ; dword = double word = 4 bytes = 32 bits. Escribe valor variable 'errno'.
-    mov     rax, 0                          ; Pongo 0 en RAX para el retorno (NULL).
-
-    jmp     .restore
-    
-    ret
-
 .loop:
     mov     al, BYTE[r12]                   ; (parte baja de RAX).
     mov     BYTE[r13], al 
@@ -69,6 +59,18 @@ _ft_strdup:
 
     jmp     .loop      
 
+.end_loop:
+    mov     rax, rsi                        ; Mover el puntero base original (guardado en RSI) a RAX para el retorno
+    jmp     .restore
+
+.handle_error:
+    call    __errno_location wrt ..plt      ; Obtengo la dirección de la variable 'errno' en RAX. (RAX = &errno)
+    mov     edi, 12                         ; 12 = ENOMEM
+    mov     dword [rax], edi                ; dword = double word = 4 bytes = 32 bits. Escribe valor variable 'errno'.
+    mov     rax, 0                          ; Pongo 0 en RAX para el retorno (NULL).
+
+    jmp     .restore
+
 .restore:
     pop     rbx                             ; Restaurar RBX
     pop     rsi                             ; Restaurar RSI
@@ -76,8 +78,5 @@ _ft_strdup:
     pop     r12                             ; Restaurar R12
     pop     rbp                             ; Restaurar RBP
 
-.end_loop:
-    mov     rax, rsi                        ; Mover el puntero base original (guardado en RSI) a RAX para el retorno
-    jmp     .restore
-
     ret
+
