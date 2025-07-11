@@ -42,7 +42,7 @@ _ft_strdup:
 
     call    malloc wrt ..plt                ; Llamo a Malloc. Retorna el nuevo puntero (o NULL) en RAX. 
     cmp     rax, 0
-    je      .handle_error                   ; Si se activa la Flag ZF (RAX es NULL) malloc falló, salta a .handle_error.
+    je      .handle_error                   ; Activa ZF (RAX es NULL) si malloc falló (malloc modifica errno).
 
     mov     rsi, rax                        ; puntero base de la memoria asignada (de RAX) en RSI para el return
     mov     r13, rax                        ; puntero base de la memoria asignada (de RAX) en RDX para copiar.
