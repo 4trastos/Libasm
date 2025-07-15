@@ -161,7 +161,7 @@ void print_menu(void)
     printf("Opción: ");
 }
 
-int main(int argc, char **argv)
+int main()
 {
     char input[10];
     int option;
