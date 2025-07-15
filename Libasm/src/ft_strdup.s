@@ -46,7 +46,6 @@ _ft_strdup:
 
     mov     rsi, rax                        ; puntero base de la memoria asignada (de RAX) en RSI para el return
     mov     r13, rax                        ; puntero base de la memoria asignada (de RAX) en RDX para copiar.
-    jmp     .loop
 
 .loop:
     mov     al, BYTE[r12]                   ; (parte baja de RAX).

@@ -21,13 +21,14 @@ _ft_strcmp:
 	xor		rax, rax	
 
 .loop:
+	mov		r8b, BYTE[rdi]      ; Uso el registro de Propósito genral de 8bits
+	mov		r9b, BYTE[rsi]      ; Uso el registro de Propósito genral de 8bits
+	
 	cmp		BYTE[rdi], 0
 	je		.calculate
 	cmp		BYTE[rsi], 0
 	je		.calculate
 	
-	mov		r8b, BYTE[rdi]      ; Uso el registro de Propósito genral de 8bits
-	mov		r9b, BYTE[rsi]      ; Uso el registro de Propósito genral de 8bits
 	
 	cmp		r9b, r8b
 	jne		.calculate

@@ -1,0 +1,20 @@
+¡Hola, mundo! 🌍✨
+
+Esto es una línea con acentos: á, é, í, ó, ú, ü, ñ, Ñ  
+Símbolos especiales: @#$%^&*()_+|~=`{}[]:";'<>?,./  
+Caracteres Unicode raros:  
+– En dash (–)  
+— Em dash (—)  
+• Bullet (•)  
+œ (OE ligature), ß (Eszett), æ (AE ligature), Ø (O with stroke)  
+Matemáticos: ∑ (sumatoria), ∞ (infinito), √ (raíz), π (pi), ≠ (distinto)  
+Idiomas varios:  
+  - Русский (ruso)  
+  - العربية (árabe)  
+  - 中文 (chino)  
+  - 日本語 (japonés)  
+  - 한국어 (coreano)  
+
+Emojis: 😄🔥💻📚🚀🔐🧠👾🦾
+
+Fin del texto 🛑

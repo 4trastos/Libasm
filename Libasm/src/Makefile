@@ -3,7 +3,7 @@ GCC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 
 NA  = nasm
-NA_FLAGS = -f elf64 -DPIC
+NA_FLAGS = -f elf64
 
 SRC_MANDATORY = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 OBJS_MANDATORY = $(SRC_MANDATORY:.s=.o)
