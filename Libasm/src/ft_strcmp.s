@@ -23,7 +23,7 @@ _ft_strcmp:
 .loop:
 	mov		r8b, BYTE[rdi]      ; Uso el registro de Propósito genral de 8bits
 	mov		r9b, BYTE[rsi]      ; Uso el registro de Propósito genral de 8bits
-	
+
 	cmp		BYTE[rdi], 0
 	je		.calculate
 	cmp		BYTE[rsi], 0
@@ -39,9 +39,9 @@ _ft_strcmp:
 	jmp		.loop
 
 .calculate:
-	mov		al, r8b;
-	sub		al, r9b
-	movsx	rax, al             ; Para extender correctamente el resultado de la resta con signo a 64 bits, ya que strcmp puede devolver valores negativos.
+	mov		dl, r8b;
+	sub		dl, r9b
+	movsx	rax, dl             ; Para extender correctamente el resultado de la resta con signo a 64 bits, ya que strcmp puede devolver valores negativos.
 	jmp		.end_loop
 
 .end_loop:
